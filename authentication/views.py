@@ -37,3 +37,9 @@ def signup_view(request):
     form = SignUpForm()
     context = {'form': form}
     return render(request, 'generic_form.html', context)
+
+
+def logout_view(request):
+    logout(request)
+    messages.success(request, 'You have successfully logged out.')
+    return HttpResponseRedirect(reverse('home'))

@@ -13,7 +13,7 @@
 <body>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">Mama 5 Fitness</a>
+      <a class="navbar-brand" href="{% url 'home' %}">Mama 5 Fitness</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText"
         aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -23,21 +23,28 @@
           <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Home</a>
           </li>
+          {% if request.user.username %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+          </li>
+          {% else %}
           <li class="nav-item">
             <a class="nav-link" href="{% url 'login' %}">Login</a>
           </li>
+          {% endif %}
+
           <li class="nav-item">
             <a class="nav-link" href="{% url 'signup' %}">Sign Up</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">About Us</a>
+            <a class="nav-link" href="{% url 'about' %}">About Us</a>
           </li>
         </ul>
         {% if request.user %}
         <span class="navbar-text">
           Welcome {{request.user.username}}
         </span>
-          {% else %}
+        {% else %}
         <span class="navbar-text">
           Welcome
         </span>
