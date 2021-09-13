@@ -27,15 +27,21 @@
             <a class="nav-link" href="{% url 'login' %}">Login</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Sign Up</a>
+            <a class="nav-link" href="{% url 'signup' %}">Sign Up</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#">About Us</a>
           </li>
         </ul>
+        {% if request.user %}
+        <span class="navbar-text">
+          Welcome {{request.user.username}}
+        </span>
+          {% else %}
         <span class="navbar-text">
           Welcome
         </span>
+        {% endif %}
       </div>
     </div>
   </nav>

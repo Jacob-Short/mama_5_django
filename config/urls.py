@@ -17,10 +17,11 @@ from django.contrib import admin
 from django.contrib.auth import authenticate
 from django.urls import path
 from mama5.views import index_view
-from authentication.views import login_view
+from authentication.views import login_view, signup_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', index_view, name='home'),
     path('login/', login_view, name='login'),
+    path('signup/', signup_view, name='signup'),
 ]
