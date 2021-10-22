@@ -55,7 +55,8 @@ INSTALLED_APPS = [
     'user_account',
     'user_message',
     'user_post',
-    'notification',
+    'message_notification',
+    'post_notification',
     'post_comment',
 
 ]
