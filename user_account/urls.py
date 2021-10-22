@@ -9,5 +9,7 @@ urlpatterns = [
     path('login/', user_account_views.LoginView.as_view(), name='login'),
     path('logout/', user_account_views.logout_view, name='logout'),
     path('register/', user_account_views.RegisterView.as_view(), name='register'),
+    path('profile/<int:id>/', user_account_views.AccountView.as_view(), name='profile'),
+    path('about/', user_account_views.about, name='about'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

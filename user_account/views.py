@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.shortcuts import redirect, render, reverse
 from django.views.generic import View
 from user_account.models import UserAccount
@@ -125,16 +126,19 @@ def logout_view(request):
     return redirect("/")
 
 
-class ProfileView(View):
+class AccountView(View):
     """each users profile"""
 
     def get(self, request, id):
 
         signed_in_user = request.user
+        target_user = UserAccount.objects.get(id=id)
+
         template = "profile.html"
 
         context = {
-            "signed_in_user": signed_in_user,
+            'signed_in_user': signed_in_user,
+            'target_user': target_user
         }
         return render(request, template, context)
 
@@ -195,3 +199,10 @@ class EditProfile(View):
                 level=messages.ERROR,
             )
             return redirect(reverse("profile", args=(id,)))
+
+
+def about(request):
+    template = 'about.html'
+    signed_in_user = request.user
+    context = {'signed_in_user': signed_in_user}
+    return render(request, template, context)
