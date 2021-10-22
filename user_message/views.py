@@ -1,20 +1,71 @@
-from django.db import models
-from django.utils import timezone
+from django.shortcuts import redirect, render, reverse, HttpResponseRedirect
+from .models import Message
 from user_account.models import UserAccount
+from user_message.forms import CreateMessageForm
+from django.views.generic import View
 
 
-class Message(models.Model):
-
-    CHOICES = [(1, 'True'), (2, 'False')]
-    message = models.TextField(max_length=500)
-    creator = models.ForeignKey(
-        UserAccount, related_name='%(class)s_author', null=True,on_delete=models.CASCADE)
-    recipient = models.ForeignKey(
-        UserAccount, related_name='%(class)s_recipient', null=True,on_delete=models.CASCADE)
-    time_created = models.DateTimeField(default=timezone.now)
-    isNew = models.BooleanField(choices=CHOICES, default=1)
+from django.contrib import messages
 
 
 
-    def __str__(self):
-        return self.message
+def get_messages_count(logged_in_user):
+    signed_in_user = logged_in_user
+    user_messages = Message.objects.filter(recipient=signed_in_user)
+
+    messages_count = len(user_messages)
+    return messages_count
+
+class CreateMessageView(View):
+    '''send a message to another user'''
+
+    def get(self, request, id):
+
+        template = "generic_form.html"
+        signed_in_user = request.user
+        form = CreateMessageForm(request.POST)
+        context = {'form': form, 'signed_in_user': signed_in_user, 'header': 'messages'}
+    
+        return render(request,template, context)
+
+    def post(self, request, id):
+        form = CreateMessageForm(request.POST)
+        recipient = UserAccount.objects.get(id=id)
+        if form.is_valid():
+            data = form.cleaned_data
+            message = Message.objects.create(
+                message=data["message"], author=request.user, recipient=recipient
+            )
+            messages.add_message(
+                request, message="Message sent.", level=messages.SUCCESS
+            )
+            return redirect(reverse("profile", args=(id,)))
+
+
+class AllMessages(View):
+    '''can view all messages'''
+
+    def get(self, request):
+
+        template = 'all_messages.html'
+        signed_in_user = request.user
+        user_messages = Message.objects.filter(recipient=signed_in_user)
+
+        context = {
+            "user_messages": user_messages,
+            "signed_in_user": signed_in_user
+        }
+        return render(request, template, context)
+
+    def post(self, request):
+        ...
+
+
+def delete_message(request, id):
+    message = Message.objects.get(id=id)
+    signed_in_user_id = request.user.id
+    message.delete()
+    messages.add_message(
+                request, message="Message deleted.", level=messages.ERROR
+            )
+    return redirect(reverse("usermessages", args=(signed_in_user_id,)))
