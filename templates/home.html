@@ -13,19 +13,8 @@
 <body>
   {% block content %}
   <div>
-    <h1>Welcome</h1>
+    <h1>Welcome {{ signed_in_user }}!</h1>
   </div>
-  <div>
-    <h2>details about site</h2>
-  </div>
-  <h3>Have an Account?</h3>
-  <a href='/login/'>
-    <button>Login</button>
-  </a>
-  <h3>Don't have an Account?</h3>
-  <a href='/sregister/'>
-    <button>Sign Up</button>
-  </a>
   {% endblock %}
 </body>
 
