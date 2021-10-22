@@ -49,7 +49,7 @@ class AllPostsView(View):
 
         reviews = UserPost.objects.all()
 
-        template = "all_reviews.html"
+        template = "all_posts.html"
         context = {"reviews": reviews, "signed_in_user": signed_in_user}
         return render(request, template, context)
 

@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
+    <title>User Detail</title>
+  </head>
+
+  
+  <body>
+     {% block content %}
+     <div class="homepage-header">
+        <h2>Messages</h2>
+        {% for item in user_messages %}
+        <div class="card">
+            <h5 class="card-header">Messages for {{ item.recipient }} </h5>
+            <div class="card-body">
+              <h5 class="card-title">Sent at {{ item.time_created }}</h5>
+              <p class="card-text">{{ item.message }}</p>
+              <a href="#" class="btn btn-primary">From {{ item.creator }}</a>
+            </div>
+          </div>
+        {% endfor %}
+    </div>
+      {% endblock %}
+    </body>
+    </html>
