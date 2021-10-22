@@ -1,14 +1,17 @@
 [tool.poetry]
-name = "mama_5_fitness"
+name = "mama_5_django"
 version = "0.1.0"
 description = ""
-authors = ["Jacob-Short <thatmanjshort@gmail.com>"]
+authors = ["Jacob Short <thatmanjshort@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.9"
-Django = "^3.2.6"
+Django = "^3.2.8"
+Pillow = "^8.4.0"
+django-mptt = "^0.13.4"
 
 [tool.poetry.dev-dependencies]
+black = {version = "^21.9b0", allow-prereleases = true}
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
