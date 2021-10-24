@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
+    <title>User Detail</title>
+  </head>
+
+  
+  <body>
+     {% block content %}
+     <div class="homepage-header">
+        <h2>My Posts</h2>
+        <div>
+            {% for item in posts %}
+            <div class="card" style="width: 18rem;">
+                {% if item.picture %}
+                <img src="{{ item.picture }}" class="card-img-top" alt="...">
+                {% endif %}
+                <div class="card-body">
+                  <h5 class="card-title">{{ item.title }}</h5>
+                </div>
+                <ul class="list-group list-group-flush">
+                  <p class="card-text">{{ item.post }}</p>
+                  <li class="list-group-item">isNew: {{ item.isNew }}</li>
+                </ul>
+                <div class="card-body">
+                  <li class="list-group-item">Created at: {{ item.time_created }}</li>
+                    <li class="list-group-item">Created by: {{ item.user_created }}</li>
+                </div>
+              </div>
+            {% endfor %}
+        </div>
+    </div>
+      {% endblock %}
+    </body>
+    </html>

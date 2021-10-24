@@ -45,10 +45,10 @@ class CreateMessageView(View):
 class AllMessages(View):
     '''can view all messages'''
 
-    def get(self, request):
+    def get(self, request, id):
 
         template = 'all_messages.html'
-        signed_in_user = request.user
+        signed_in_user = UserAccount.objects.get(id=id)
         user_messages = Message.objects.filter(recipient=signed_in_user)
 
         context = {

@@ -14,7 +14,6 @@ class UserAccount(AbstractUser):
     bio = models.TextField(null=True, blank=True)
     isNew = models.BooleanField(choices=CHOICES, default=1)
 
-    USERNAME_FIELD = 'email'
     EMAIL_FIELD = 'email'
     REQUIRED_FIELDS = []
 

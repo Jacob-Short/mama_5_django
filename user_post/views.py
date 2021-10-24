@@ -57,6 +57,23 @@ class AllPostsView(View):
         ...
 
 
+class UserPostsView(View):
+    """displays users posts"""
+
+    def get(self, request):
+
+        signed_in_user = request.user
+
+        reviews = UserPost.objects.filter(id=signed_in_user.id)
+
+        template = "user_posts.html"
+        context = {"reviews": reviews, "signed_in_user": signed_in_user}
+        return render(request, template, context)
+
+    def post(self, request):
+        ...
+
+
 class PostDetailView(View):
     def get(self, request, id):
 

@@ -53,6 +53,7 @@ class RegisterView(View):
             user = UserAccount.objects.create_user(
                 first_name=data.get("first_name"),
                 last_name=data.get("last_name"),
+                username=data.get("username"),
                 email=data.get("email"),
                 password=data.get("password"),
             )
