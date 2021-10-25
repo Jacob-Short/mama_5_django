@@ -5,7 +5,7 @@ from django.conf import settings
 
 urlpatterns = [
     path('messages/<int:id>/', user_message_views.AllMessages.as_view(), name='all_messages'),
-    path('send_message/', user_message_views.CreateMessageView.as_view(), name='send_message'),
+    path('send_message/<int:id>/', user_message_views.CreateMessageView.as_view(), name='send_message'),
     path('delete_message', user_message_views.delete_message, name='delete_message'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -11,7 +11,9 @@
   
     {% block content %}
     <body>
-        <h2>Profile Page</h2>
+      {% if target_user == signed_in_user %}
+        <h3>Welcome in{{ signed_in_user.first_name }} </h3>
+
         <div class="card" style="width: 18rem;">
           <img src="{{ target_user.picture }}" class="card-img-top" alt="...">
           <div class="card-body">
@@ -25,10 +27,29 @@
           <div class="card-body">
             <a href="/messages/{{ signed_in_user.id }}/" class="card-link">Messages</a>
             <a href="/user_posts/" class="card-link">My posts</a>
-            <a href="#" class="card-link">Edit Profile</a>
+            <a href="/edit_account/{{signed_in_user.id}}/" class="card-link">Edit Profile</a>
             <a href="#" class="card-link">Preferences</a>
           </div>
         </div>
+        {% else %}
+        <h3>{{ tagret_user.username }}'s Profile </h3>
+
+        <div class="card" style="width: 18rem;">
+          <img src="{{ target_user.picture }}" class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title">{{ target_user }}</h5>
+            <p class="card-text">Bio: {{ target_user.bio }}</p>
+          </div>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">Email: {{ tagret_user.email }}</li>
+          </ul>
+          <div class="card-body">
+            <a href="/messages/{{ signed_in_user.id }}/" class="card-link">Send Message</a>
+            <a href="/user_posts/{{tagret_user.id}}/" class="card-link">{{ target_user.username }}'s Posts</a>
+          </div>
+        </div>  
+        {% endif %}
+
     </body>
     {% endblock %}
   </body>

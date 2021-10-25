@@ -147,11 +147,12 @@ class AccountView(View):
         ...
 
 
-class EditProfile(View):
+class EditAccountView(View):
     """can edit your profile"""
 
     def get(self, request, id):
 
+        template = 'generic_form.html'
         signed_in_user = request.user
         profile_user = UserAccount.objects.get(id=id)
         form = EditAccountForm(
@@ -169,7 +170,7 @@ class EditProfile(View):
             "form": form,
             "profile_user": profile_user,
         }
-        return render(request, "generic_template.html", context)
+        return render(request, template, context)
 
     def post(self, request, id):
 
