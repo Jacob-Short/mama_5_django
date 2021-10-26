@@ -12,22 +12,35 @@
     {% block content %}
     <body>
       {% if target_user == signed_in_user %}
-        <h3>Welcome in{{ signed_in_user.first_name }} </h3>
+        <h3>Welcome in{{ signed_in_user.username }} </h3>
 
         <div class="card" style="width: 18rem;">
-          <img src="{{ target_user.picture }}" class="card-img-top" alt="...">
+          <img src="{{ target_user.profile_picture }}" class="card-img-top" alt="...">
           <div class="card-body">
             <h5 class="card-title">{{ target_user }}</h5>
+            {% if target_user.bio %}
             <p class="card-text">Bio: {{ target_user.bio }}</p>
+            {% else %}
+            <p class="card-text">User does not have a bio yet</p>
+            {% endif %}
+
           </div>
           <ul class="list-group list-group-flush">
+            {% if target_user.email %}
             <li class="list-group-item">Email: {{ tagret_user.email }}</li>
-            <li class="list-group-item">isNew: {{ target_user.isNew }}<li>
+            {% else %}
+            <p class="card-text">User does not have a email yet</p>
+            {% endif %}
+            <li class="list-group-item">isNew: {{ target_user.is_new }}<li>
           </ul>
           <div class="card-body">
             <a href="/messages/{{ signed_in_user.id }}/" class="card-link">Messages</a>
             <a href="/user_posts/" class="card-link">My posts</a>
+            {% if profile %}
             <a href="/edit_account/{{signed_in_user.id}}/" class="card-link">Edit Profile</a>
+            {% else %}
+            <a href="/createprofile/" class="card-link">Create Profile</a>
+            {% endif %}
             <a href="#" class="card-link">Preferences</a>
           </div>
         </div>

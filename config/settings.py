@@ -58,6 +58,8 @@ INSTALLED_APPS = [
     'message_notification',
     'post_notification',
     'post_comment',
+    'all_notifications',
+    'tranont',
 
 ]
 
