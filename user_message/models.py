@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils import timezone
-from user_account.models import UserAccount
+from user_account.models import User
 
 
 class Message(models.Model):
@@ -9,9 +9,9 @@ class Message(models.Model):
 
     message = models.TextField(max_length=500)
     creator = models.ForeignKey(
-        UserAccount, related_name='%(class)s_author', null=True,on_delete=models.CASCADE)
+        User, related_name='%(class)s_author', null=True,on_delete=models.CASCADE)
     recipient = models.ForeignKey(
-        UserAccount, related_name='%(class)s_recipient', null=True,on_delete=models.CASCADE)
+        User, related_name='%(class)s_recipient', null=True,on_delete=models.CASCADE)
     time_created = models.DateTimeField(default=timezone.now)
     isNew = models.BooleanField(choices=CHOICES, default=1)
 

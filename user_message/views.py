@@ -1,6 +1,6 @@
 from django.shortcuts import redirect, render, reverse, HttpResponseRedirect
 from .models import Message
-from user_account.models import UserAccount
+from user_account.models import User
 from user_message.forms import CreateMessageForm
 from django.views.generic import View
 
@@ -30,7 +30,7 @@ class CreateMessageView(View):
 
     def post(self, request, id):
         form = CreateMessageForm(request.POST)
-        recipient = UserAccount.objects.get(id=id)
+        recipient = User.objects.get(id=id)
         if form.is_valid():
             data = form.cleaned_data
             message = Message.objects.create(
@@ -48,7 +48,7 @@ class AllMessages(View):
     def get(self, request, id):
 
         template = 'all_messages.html'
-        signed_in_user = UserAccount.objects.get(id=id)
+        signed_in_user = User.objects.get(id=id)
         user_messages = Message.objects.filter(recipient=signed_in_user)
 
         context = {

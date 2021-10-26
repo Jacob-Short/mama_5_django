@@ -1,6 +1,10 @@
 from django.contrib.auth.base_user import BaseUserManager
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import (
+    AbstractBaseUser,
+    BaseUserManager,
+    PermissionsMixin,
+)
 from django.utils.translation import ugettext_lazy as _
 from datetime import date
 
@@ -36,7 +40,7 @@ class UserManager(BaseUserManager):
         return new_user
 
 
-class UserAccount(AbstractBaseUser):
+class User(AbstractBaseUser, PermissionsMixin):
     """a user account for site"""
 
     first_name = models.CharField(
@@ -49,14 +53,15 @@ class UserAccount(AbstractBaseUser):
         blank=True,
         null=True,
     )
-    username = models.CharField(max_length=50, blank=True, null=True, unique=True)
     email = models.EmailField(_("email address"), unique=True)
     picture = models.ImageField(
-        upload_to="images/", max_length=100, default="images/download.png"
+        upload_to="images/",
+        max_length=100,
+        default="images/default_profile_picture.jpeg",
     )
-    bio = models.TextField(null=True, blank=True)
+    bio = models.TextField(_("about"), null=True, blank=True)
     is_new = models.BooleanField(default=True)
-    is_active = models.BooleanField(default=True)
+    active = models.BooleanField(default=True)
     staff = models.BooleanField(default=True)
     admin = models.BooleanField(default=True)
 
@@ -71,9 +76,11 @@ class UserAccount(AbstractBaseUser):
     def full_name(self):
         return f"{self.first_name} {self.last_name}"
 
-    @property
-    def is_active(self):
-        return self.active
+    def has_perm(self, perm, obj=None):
+        return True
+
+    def has_module_perms(self, app_label):
+        return True
 
     @property
     def is_staff(self):

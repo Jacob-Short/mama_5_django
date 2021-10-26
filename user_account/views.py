@@ -1,11 +1,14 @@
-from django.contrib.auth.models import User
 from django.shortcuts import redirect, render, reverse
-from django.views.generic import View
-from user_account.models import UserAccount
+from django.views.generic import View, CreateView
 
-from user_account.forms import RegisterForm, LoginForm, EditAccountForm
+# models
+from user_account.models import User
+
+# forms
+from user_account.forms import RegisterForm, LoginForm, EditUserForm
+
 from django.contrib.auth import authenticate, login, logout
-
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 
 
@@ -22,7 +25,7 @@ class IndexView(View):
     def post(self, request):
         ...
 
-class HomeView(View):
+class HomeView(View, LoginRequiredMixin):
     """index page upon coming to site"""
 
     def get(self, request):
@@ -34,6 +37,13 @@ class HomeView(View):
 
     def post(self, request):
         ...
+
+# class RegisterView(CreateView):
+#     form_class = RegisterForm
+#     template_name = 'generic_form.html'
+#     success_url = '/login/'
+
+
 
 
 class RegisterView(View):
@@ -50,36 +60,12 @@ class RegisterView(View):
         form = RegisterForm(request.POST)
         if form.is_valid():
             data = form.cleaned_data
-            user = UserAccount.objects.create_user(
-                first_name=data.get("first_name"),
-                last_name=data.get("last_name"),
-                username=data.get("username"),
+            user = User.objects.create_user(
                 email=data.get("email"),
                 password=data.get("password"),
             )
 
-            # to send user email confirmation
-
-            # gmail_user = "jacobshort.stu@gmail.com"
-            # gmail_password = "wlkkouoagzjzzggm"
-            # sent_from = gmail_user
-            # to = user.email
-            # subject = "Welcome to Gamerzone!"
-            # body = f"""Thank you so much for signing up with us {user.username}!"""
-            # email_text = f"""
-            # From: {sent_from}\n
-            # To: {to}\n
-            # Subject: {subject}\n
-            # {body}
-            # """
-
             try:
-                # smtp_server = smtplib.SMTP_SSL("smtp.gmail.com", 465)
-                # smtp_server.ehlo()
-                # smtp_server.login(gmail_user, gmail_password)
-                # smtp_server.sendmail(sent_from, to, email_text)
-                # smtp_server.close()
-                # print("Email sent successfully!")
                 messages.add_message(request, messages.SUCCESS, f"Login Successful")
                 login(request, user)
                 return redirect(reverse("home"))
@@ -113,6 +99,14 @@ class LoginView(View):
                     level=messages.SUCCESS,
                 )
                 return redirect(reverse("home"))
+            else:
+                messages.add_message(
+                    request,
+                    message="Credentials Invalid",
+                    level=messages.ERROR,
+                )
+                return redirect(reverse("login"))
+
         else:
             messages.add_message(
                 request, message="Invalid credentials.", level=messages.ERROR
@@ -128,13 +122,13 @@ def logout_view(request):
     return redirect("/")
 
 
-class AccountView(View):
+class UserView(View):
     """each users profile"""
 
     def get(self, request, id):
 
         signed_in_user = request.user
-        target_user = UserAccount.objects.get(id=id)
+        target_user = User.objects.get(id=id)
 
         print(f'Picture: {target_user.picture}')
 
@@ -150,22 +144,21 @@ class AccountView(View):
         ...
 
 
-class EditAccountView(View):
+class EditUserView(View):
     """can edit your profile"""
 
     def get(self, request, id):
 
         template = 'generic_form.html'
         signed_in_user = request.user
-        profile_user = UserAccount.objects.get(id=id)
-        form = EditAccountForm(
+        profile_user = User.objects.get(id=id)
+        form = EditUserForm(
             initial={
                 "first_name": profile_user.first_name,
                 "last_name": profile_user.last_name,
                 "email": profile_user.email,
                 "picture": profile_user.picture,
                 "bio": profile_user.bio,
-                "password": profile_user.password,
             }
         )
         context = {
@@ -178,8 +171,8 @@ class EditAccountView(View):
     def post(self, request, id):
 
         profile_id = request.user.id
-        profile_user = UserAccount.objects.get(id=id)
-        form = EditAccountForm(request.POST, request.FILES)
+        profile_user = User.objects.get(id=id)
+        form = EditUserForm(request.POST, request.FILES)
         try:
             if form.is_valid():
                 data = form.cleaned_data

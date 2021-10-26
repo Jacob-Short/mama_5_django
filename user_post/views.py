@@ -3,7 +3,7 @@ from django.views.generic import View
 from user_post.models import UserPost
 from user_post.forms import CreateUserPostForm
 
-from user_account.models import UserAccount
+from user_account.models import User
 
 
 from django.contrib import messages
