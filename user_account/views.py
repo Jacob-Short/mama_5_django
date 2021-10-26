@@ -135,6 +135,7 @@ class UserView(View):
         template = "profile.html"
 
         context = {"signed_in_user": signed_in_user, "target_user": target_user}
+        # breakpoint()
         return render(request, template, context)
 
     def post(self, request):

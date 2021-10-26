@@ -67,9 +67,9 @@ class EditUserForm(forms.Form):
     bio = forms.CharField(widget=forms.Textarea)
     password = forms.CharField(widget=forms.PasswordInput)
 
-class EditUserForm(forms.Form):
+# class EditUserForm(forms.Form):
     
-    email = forms.EmailField()
-    # this widget/plugin '.PasswordInput' hides the chars with '****'
-    password = forms.CharField(widget=forms.PasswordInput, required=False)
-    confirm_password = forms.CharField(widget=forms.PasswordInput, required=False)
+#     email = forms.EmailField()
+#     # this widget/plugin '.PasswordInput' hides the chars with '****'
+#     password = forms.CharField(widget=forms.PasswordInput, required=False)
+#     confirm_password = forms.CharField(widget=forms.PasswordInput, required=False)

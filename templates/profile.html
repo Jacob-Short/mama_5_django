@@ -44,11 +44,11 @@
             <p class="card-text">Bio: {{ target_user.bio }}</p>
           </div>
           <ul class="list-group list-group-flush">
-            <li class="list-group-item">Bio: {{ tagret_user }}</li>
+            <li class="list-group-item">Staff: {{ tagret_user.is_staff }}</li>
           </ul>
           <div class="card-body">
             <a href="/messages/{{ signed_in_user.id }}/" class="card-link">Send Message</a>
-            <a href="/user_posts/{{tagret_user.id}}/" class="card-link">{{ target_user.username }}'s Posts</a>
+            <a href="/user_posts/{{tagret_user.id}}/" class="card-link">{{ target_user.first_name }}'s Posts</a>
           </div>
         </div>  
         {% endif %}
