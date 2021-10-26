@@ -59,17 +59,23 @@ class RegisterForm(forms.Form):
     confirm_password = forms.CharField(widget=forms.PasswordInput)
 
 
-class EditUserForm(forms.Form):
-    first_name = forms.CharField(max_length=150)
-    last_name = forms.CharField(max_length=150)
-    email = forms.EmailField()
-    picture = forms.ImageField(required=False)
-    bio = forms.CharField(widget=forms.Textarea)
-    password = forms.CharField(widget=forms.PasswordInput)
+class UserChangeForm(forms.ModelForm):
+    password = ReadOnlyPasswordHashField()
 
-# class EditUserForm(forms.Form):
-    
-#     email = forms.EmailField()
-#     # this widget/plugin '.PasswordInput' hides the chars with '****'
-#     password = forms.CharField(widget=forms.PasswordInput, required=False)
-#     confirm_password = forms.CharField(widget=forms.PasswordInput, required=False)
+    class Meta:
+        model = User
+        fields = (
+            "email",
+            "first_name",
+            "last_name",
+            "picture",
+            "bio",
+            "password",
+            "is_active",
+        )
+
+    def clean_password(self):
+        # Regardless of what the user provides, return the initial value.
+        # This is done here, rather than on the field, because the
+        # field does not have access to the initial value
+        return self.initial["password"]

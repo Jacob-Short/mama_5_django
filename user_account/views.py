@@ -5,7 +5,7 @@ from django.views.generic import View, CreateView
 from user_account.models import User
 
 # forms
-from user_account.forms import RegisterForm, LoginForm, EditUserForm
+from user_account.forms import RegisterForm, LoginForm, UserChangeForm
 
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -91,27 +91,20 @@ class LoginView(View):
             logged_in_user = authenticate(
                 request, email=data.get("email"), password=data.get("password")
             )
-            if logged_in_user is not None:
-                login(request, logged_in_user)
-                messages.add_message(
-                    request,
-                    message="You have successfully logged in.",
-                    level=messages.SUCCESS,
-                )
-                return redirect(reverse("home"))
-            else:
-                messages.add_message(
-                    request,
-                    message="Credentials Invalid",
-                    level=messages.ERROR,
-                )
-                return redirect(reverse("login"))
-
+            login(request, logged_in_user)
+            messages.add_message(
+                request,
+                message="You have successfully logged in.",
+                level=messages.SUCCESS,
+            )
+            return redirect(reverse("home"))
         else:
             messages.add_message(
-                request, message="Invalid credentials.", level=messages.ERROR
+                request,
+                message="Credentials Invalid",
+                level=messages.ERROR,
             )
-            return redirect("login")
+            return redirect(reverse("login"))
 
 
 def logout_view(request):
@@ -150,7 +143,7 @@ class EditUserView(View):
         template = "generic_form.html"
         signed_in_user = request.user
         profile_user = User.objects.get(id=id)
-        form = EditUserForm(
+        form = UserChangeForm(
             initial={
                 "first_name": profile_user.first_name,
                 "last_name": profile_user.last_name,
@@ -168,9 +161,9 @@ class EditUserView(View):
 
     def post(self, request, id):
 
-        profile_id = request.user.id
+
         profile_user = User.objects.get(id=id)
-        form = EditUserForm(request.POST, request.FILES)
+        form = UserChangeForm(request.POST, request.FILES)
         try:
             if form.is_valid():
                 data = form.cleaned_data

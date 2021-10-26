@@ -19,6 +19,7 @@ from django.urls import path
 from user_account.urls import urlpatterns as user_account_urls
 from user_post.urls import urlpatterns as user_post_urls
 from user_message.urls import urlpatterns as user_message_urls
+from tranont.urls import urlpatterns as tranont_urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,3 +28,4 @@ urlpatterns = [
 urlpatterns += user_account_urls
 urlpatterns += user_post_urls
 urlpatterns += user_message_urls
+urlpatterns += tranont_urls
