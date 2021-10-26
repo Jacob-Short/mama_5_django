@@ -5,7 +5,7 @@ from django.views.generic import View, CreateView
 from user_account.models import User
 
 # forms
-from user_account.forms import RegisterForm, LoginForm, UserChangeForm
+from user_account.forms import RegisterForm, LoginForm, UserEditForm
 
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -143,7 +143,7 @@ class EditUserView(View):
         template = "generic_form.html"
         signed_in_user = request.user
         profile_user = User.objects.get(id=id)
-        form = UserChangeForm(
+        form = UserEditForm(
             initial={
                 "first_name": profile_user.first_name,
                 "last_name": profile_user.last_name,
@@ -163,7 +163,7 @@ class EditUserView(View):
 
 
         profile_user = User.objects.get(id=id)
-        form = UserChangeForm(request.POST, request.FILES)
+        form = UserEditForm(request.POST, request.FILES)
         try:
             if form.is_valid():
                 data = form.cleaned_data
