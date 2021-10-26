@@ -105,13 +105,14 @@ class LoginView(View):
             logged_in_user = authenticate(
                 request, email=data.get("email"), password=data.get("password")
             )
-            login(request, logged_in_user)
-            messages.add_message(
-                request,
-                message="You have successfully logged in.",
-                level=messages.SUCCESS,
-            )
-            return redirect(reverse("home"))
+            if logged_in_user is not None:
+                login(request, logged_in_user)
+                messages.add_message(
+                    request,
+                    message="You have successfully logged in.",
+                    level=messages.SUCCESS,
+                )
+                return redirect(reverse("home"))
         else:
             messages.add_message(
                 request, message="Invalid credentials.", level=messages.ERROR
@@ -134,6 +135,8 @@ class AccountView(View):
 
         signed_in_user = request.user
         target_user = UserAccount.objects.get(id=id)
+
+        print(f'Picture: {target_user.picture}')
 
         template = "profile.html"
 

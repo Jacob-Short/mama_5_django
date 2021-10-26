@@ -15,6 +15,7 @@
      {% block content %}
      <div class="homepage-header">
         <h2>Messages</h2>
+        {% if user_messages %}
         {% for item in user_messages %}
         <div class="card">
             <h5 class="card-header">Messages for {{ item.recipient }} </h5>
@@ -25,6 +26,9 @@
             </div>
           </div>
         {% endfor %}
+        {% else %}
+          <h2>You have no new messages</h2>
+          {% endif %}
     </div>
       {% endblock %}
     </body>
