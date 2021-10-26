@@ -25,6 +25,7 @@ class IndexView(View):
     def post(self, request):
         ...
 
+
 class HomeView(View, LoginRequiredMixin):
     """index page upon coming to site"""
 
@@ -38,12 +39,11 @@ class HomeView(View, LoginRequiredMixin):
     def post(self, request):
         ...
 
+
 # class RegisterView(CreateView):
 #     form_class = RegisterForm
 #     template_name = 'generic_form.html'
 #     success_url = '/login/'
-
-
 
 
 class RegisterView(View):
@@ -130,14 +130,11 @@ class UserView(View):
         signed_in_user = request.user
         target_user = User.objects.get(id=id)
 
-        print(f'Picture: {target_user.picture}')
+        print(f"Picture: {target_user.picture}")
 
         template = "profile.html"
 
-        context = {
-            'signed_in_user': signed_in_user,
-            'target_user': target_user
-        }
+        context = {"signed_in_user": signed_in_user, "target_user": target_user}
         return render(request, template, context)
 
     def post(self, request):
@@ -149,7 +146,7 @@ class EditUserView(View):
 
     def get(self, request, id):
 
-        template = 'generic_form.html'
+        template = "generic_form.html"
         signed_in_user = request.user
         profile_user = User.objects.get(id=id)
         form = EditUserForm(
@@ -200,7 +197,7 @@ class EditUserView(View):
 
 
 def about(request):
-    template = 'about.html'
+    template = "about.html"
     signed_in_user = request.user
-    context = {'signed_in_user': signed_in_user}
+    context = {"signed_in_user": signed_in_user}
     return render(request, template, context)

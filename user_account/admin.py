@@ -19,12 +19,12 @@ class UserAdmin(admin.ModelAdmin):
     # create form
     add_form = UserAdminCreationForm
 
-    list_display = ("email", "admin")
-    list_filter = ("admin", 'staff', 'is_active')
+    list_display = ("email", "is_admin")
+    list_filter = ("is_admin", 'is_staff',)
     fieldsets = (
         (None, {"fields": ("email", "password", "first_name", "last_name")}),
         ("Personal Info", {"fields": ("bio",)}),
-        ("Permissions", {"fields": ("admin",)}),
+        ("Permissions", {"fields": ("is_admin",)}),
     )
 
     add_fieldsets = (
@@ -37,24 +37,3 @@ class UserAdmin(admin.ModelAdmin):
 
 
 admin.site.register(User)
-
-# class UserAdmin(BaseUserAdmin):
-#   form = UserChangeForm
-#   fieldsets = (
-#       (None, {'fields': ('email', 'password', )}),
-#       (_('Personal info'), {'fields': ('first_name', 'last_name')}),
-#       (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser',
-#                                      'groups', 'user_permissions')}),
-#       (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
-#         (_('user_info'), {'fields': ('picture', 'bio', 'isNew')}),
-#   )
-#   add_fieldsets = (
-#       (None, {
-#           'classes': ('wide', ),
-#           'fields': ('email', 'password1', 'password2'),
-#       }),
-#   )
-#   list_display = ['email', 'first_name', 'last_name', 'is_staff', "picture", "bio"]
-#   search_fields = ('email', 'first_name', 'last_name')
-#   ordering = ('email', )
-# admin.site.register(UserAccount, UserAdmin)
