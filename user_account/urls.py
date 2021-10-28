@@ -10,7 +10,8 @@ urlpatterns = [
     path('logout/', user_account_views.logout_view, name='logout'),
     path('register/', user_account_views.RegisterView.as_view(), name='register'),
     path('profile/<int:id>/', user_account_views.UserView.as_view(), name='profile'),
-    path('edit_account/<int:id>/', user_account_views.EditUserView.as_view(), name='edit_profile'),
+    path('createprofile/', user_account_views.CreateProfileView.as_view(), name='createprofile'),
+    # path('edit_account/<int:id>/', user_account_views.EditProfileView.as_view(), name='edit_profile'),
     path('about/', user_account_views.about, name='about'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

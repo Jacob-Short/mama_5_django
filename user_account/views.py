@@ -2,10 +2,14 @@ from django.shortcuts import redirect, render, reverse
 from django.views.generic import View, CreateView
 
 # models
-from user_account.models import User
+from user_account.models import User, Profile
 
 # forms
-from user_account.forms import RegisterForm, LoginForm, UserEditForm
+from user_account.forms import (
+    RegisterForm,
+    LoginForm,
+    CreateProfileForm,
+)
 
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -61,14 +65,14 @@ class RegisterView(View):
         if form.is_valid():
             data = form.cleaned_data
             user = User.objects.create_user(
-                email=data.get("email"),
+                username=data.get("username"),
                 password=data.get("password"),
             )
 
             try:
                 messages.add_message(request, messages.SUCCESS, f"Login Successful")
                 login(request, user)
-                return redirect(reverse("home"))
+                return redirect("home")
             except Exception as ex:
                 messages.add_message(request, messages.ERROR, f"Login Invalid")
                 print("Something went wrong….", ex)
@@ -89,15 +93,19 @@ class LoginView(View):
         if form.is_valid():
             data = form.cleaned_data
             logged_in_user = authenticate(
-                request, email=data.get("email"), password=data.get("password")
+                request, username=data.get("username"), password=data.get("password")
             )
-            login(request, logged_in_user)
-            messages.add_message(
-                request,
-                message="You have successfully logged in.",
-                level=messages.SUCCESS,
-            )
-            return redirect(reverse("home"))
+            if logged_in_user:
+                login(request, logged_in_user)
+                messages.add_message(
+                    request,
+                    message="You have successfully logged in.",
+                    level=messages.SUCCESS,
+                )
+                return redirect(reverse("home"))
+            if logged_in_user is not None:
+                login(request, logged_in_user)
+                return redirect(reverse("generic_form.html"))
         else:
             messages.add_message(
                 request,
@@ -110,7 +118,7 @@ class LoginView(View):
 def logout_view(request):
     logout(request)
     messages.add_message(
-        request, message="You have sucessfully logged out.", level=messages.SUCCESS
+        request, message="You have sucessfully logged out.", level=messages.INFO
     )
     return redirect("/")
 
@@ -123,11 +131,20 @@ class UserView(View):
         signed_in_user = request.user
         target_user = User.objects.get(id=id)
 
-        print(f"Picture: {target_user.picture}")
+        try:
+            profile = Profile.objects.get(user=target_user)
+        except Exception as err:
+            print(err)
+            profile = None
+        # print(f"Picture: {target_user.profile_picture}")
 
         template = "profile.html"
 
-        context = {"signed_in_user": signed_in_user, "target_user": target_user}
+        context = {
+            "signed_in_user": signed_in_user,
+            "target_user": target_user,
+            "profile": profile,
+        }
         # breakpoint()
         return render(request, template, context)
 
@@ -135,59 +152,98 @@ class UserView(View):
         ...
 
 
-class EditUserView(View):
-    """can edit your profile"""
+class CreateProfileView(View):
+    """create a profile upon signing up"""
 
-    def get(self, request, id):
+    def get(self, request):
 
+        target_user = User.objects.get(id=request.user.id)
+
+        form = CreateProfileForm()
         template = "generic_form.html"
-        signed_in_user = request.user
-        profile_user = User.objects.get(id=id)
-        form = UserEditForm(
-            initial={
-                "first_name": profile_user.first_name,
-                "last_name": profile_user.last_name,
-                "email": profile_user.email,
-                "picture": profile_user.picture,
-                "bio": profile_user.bio,
-            }
-        )
-        context = {
-            "signed_in_user": signed_in_user,
-            "form": form,
-            "profile_user": profile_user,
-        }
-        return render(request, template, context)
+        context = {"form": form}
+        return redirect(request, template, context)
 
-    def post(self, request, id):
+    def post(self, request):
 
+        target_user = User.objects.get(id=request.user.id)
 
-        profile_user = User.objects.get(id=id)
-        form = UserEditForm(request.POST, request.FILES)
-        try:
-            if form.is_valid():
-                data = form.cleaned_data
-                profile_user.first_name = data["first_name"]
-                profile_user.last_name = data["last_name"]
-                profile_user.email = data["email"]
-                profile_user.picture = data["picture"]
-                profile_user.bio = data["bio"]
-                profile_user.password = data["password"]
-                profile_user.save()
-                messages.add_message(
-                    request,
-                    message="You have sucessfully edited your profile.",
-                    level=messages.SUCCESS,
-                )
-                return redirect(reverse("profile", args=(id,)))
-        except Exception as err:
-            print(err)
-            messages.add_message(
-                request,
-                message="There was an error editing your profile.",
-                level=messages.ERROR,
+        form = CreateProfileForm(request.POST, request.FILES)
+        if form.is_valid():
+            data = form.cleaned_data
+
+            profile = Profile.objects.create(
+                user=target_user,
+                first_name=data["first_name"],
+                last_name=data["last_name"],
+                email=data["email"],
+                profile_picture=data["profile_picture"],
+                bio=data["bio"],
             )
-            return redirect(reverse("profile", args=(id,)))
+            return redirect('home')
+
+
+# class EditProfileView(View):
+#     """can edit your profile"""
+
+#     def get(self, request, id):
+
+#         template = "generic_form.html"
+#         signed_in_user = request.user
+#         try:
+#             profile_user = Profile.objects.get(user=signed_in_user)
+#             form = UserProfileEditForm(
+#                 initial={
+#                     "first_name": profile_user.first_name,
+#                     "last_name": profile_user.last_name,
+#                     "email": profile_user.email,
+#                     "profile_picture": profile_user.profile_picture,
+#                     "bio": profile_user.bio,
+#                 }
+#             )
+#         except Exception as err:
+#             print(err)
+#             messages.add_message(
+#                 request,
+#                 message="You do not have a profile yet",
+#                 level=messages.ERROR,
+#             )
+#             return redirect(reverse("profile", args=(id,)))
+#         context = {
+#             "signed_in_user": signed_in_user,
+#             "form": form,
+#             "profile_user": profile_user,
+#         }
+#         return render(request, template, context)
+
+#     def post(self, request, id):
+
+#         profile_user = User.objects.get(id=id)
+#         form = UserProfileEditForm(request.POST, request.FILES)
+#         try:
+#             if form.is_valid():
+#                 data = form.cleaned_data
+#                 profile_user.first_name = data["first_name"]
+#                 profile_user.last_name = data["last_name"]
+#                 profile_user.email = data["email"]
+#                 profile_user.profile_picture = data["profile_picture"]
+#                 profile_user.bio = data["bio"]
+#                 profile_user.password = data["password"]
+#                 profile_user.save()
+#                 messages.add_message(
+#                     request,
+#                     message="You have sucessfully edited your profile.",
+#                     level=messages.SUCCESS,
+#                 )
+#                 return redirect(reverse("profile", args=(id,)))
+#         except Exception as err:
+#             print(err)
+#             messages.add_message(
+#                 request,
+#                 message="There was an error editing your profile.",
+#                 level=messages.ERROR,
+#             )
+#             return redirect(reverse("profile", args=(id,)))
 
 
 def about(request):

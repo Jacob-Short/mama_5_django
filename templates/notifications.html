@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Notifications</title>
+</head>
+
+<body>
+  {% block content %}
+  <div>
+    <h1>Message Notifications</h1>
+    {% if new_message_notifications %}
+    {% for noti in new_message_notifications %}
+    <div class="card" style="width: 18rem;">
+        <div class="card-body">
+          <h5 class="card-title">{{noti.message}}</h5>
+          <h6 class="card-subtitle mb-2 text-muted">{{noti.user_notified.username}}</h6>
+        </div>
+      </div>
+    {% endfor %}
+    {% else %}
+    <h4>You have no new notifications</h4>
+    {% endif %}
+</div>
+<div>
+    {% if new_post_notifications %}
+    <h1>Post Notifications</h1>
+    <div class="card" style="width: 18rem;">
+        <div class="card-body">
+          <h5 class="card-title">Someone commented on {{noti.review}}</h5>
+          <h6 class="card-subtitle mb-2 text-muted">{{noti.user_notified.username}}</h6>
+        </div>
+      </div>
+    {% endfor %}
+    {% else %}
+    <h4>You have no new notifications</h4>
+    {% endif %}
+</div>
+
+<div>
+  <h1>Old Notifications</h1>
+  {% for noti in old_notifications %}
+  <div class="card" style="width: 18rem; ">
+      <div class="card-body"">
+        <h5 class="card-title" style="color: grey;"><b>Someone Commented On:</b> {{noti}}</h5>
+        <h6 class="card-subtitle mb-2 text-muted">User Notified: {{noti}}</h6>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+  {% endblock %}
+</body>
+
+</html>
