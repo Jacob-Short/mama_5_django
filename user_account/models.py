@@ -6,11 +6,8 @@ from django.contrib.auth.models import (
     BaseUserManager,
     PermissionsMixin,
 )
-from django.core.validators import EmailValidator
 from django.utils.translation import ugettext_lazy as _
-from django.contrib.auth.hashers import make_password
-from django.contrib import auth
-from datetime import date
+
 
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -23,10 +20,9 @@ class User(AbstractUser):
         return self.username
 
 
-
-
 class Profile(models.Model):
-    '''OTO with user for personal attributes'''
+    """OTO with user for personal attributes"""
+
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     first_name = models.CharField(
         max_length=150,
@@ -53,4 +49,3 @@ class Profile(models.Model):
 
     def full_name(self):
         return f"{self.first_name} {self.last_name}"
-
