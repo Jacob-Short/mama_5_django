@@ -72,7 +72,7 @@ class RegisterView(View):
             try:
                 messages.add_message(request, messages.SUCCESS, f"Login Successful")
                 login(request, user)
-                return redirect("home")
+                return redirect("createprofile")
             except Exception as ex:
                 messages.add_message(request, messages.ERROR, f"Login Invalid")
                 print("Something went wrong….", ex)
@@ -140,12 +140,12 @@ class UserView(View):
 
         template = "profile.html"
 
+        # breakpoint()
         context = {
             "signed_in_user": signed_in_user,
             "target_user": target_user,
             "profile": profile,
         }
-        # breakpoint()
         return render(request, template, context)
 
     def post(self, request):
@@ -162,7 +162,7 @@ class CreateProfileView(View):
         form = CreateProfileForm()
         template = "generic_form.html"
         context = {"form": form}
-        return redirect(request, template, context)
+        return render(request, template, context)
 
     def post(self, request):
 
@@ -177,7 +177,7 @@ class CreateProfileView(View):
                 first_name=data["first_name"],
                 last_name=data["last_name"],
                 email=data["email"],
-                profile_picture=data["profile_picture"],
+                # profile_picture=data["profile_picture"],
                 bio=data["bio"],
             )
             return redirect('home')
@@ -232,7 +232,7 @@ class CreateProfileView(View):
 #                 profile_user.save()
 #                 messages.add_message(
 #                     request,
-#                     message="You have sucessfully edited your profile.",
+#                     message="You have sucessful target_user.profile_picturely edited your profile.",
 #                     level=messages.SUCCESS,
 #                 )
 #                 return redirect(reverse("profile", args=(id,)))

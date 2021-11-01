@@ -12,14 +12,10 @@
     {% block content %}
     <body>
       {% if target_user == signed_in_user %}
-<<<<<<< HEAD
         <h3>Welcome in {{ signed_in_user.first_name }} </h3>
-=======
-        <h3>Welcome in{{ signed_in_user.username }} </h3>
->>>>>>> f9d403c12e4aaea2d6548d84d794ff2adf617d57
 
         <div class="card" style="width: 18rem;">
-          <img src="{{ target_user.profile_picture }}" class="card-img-top" alt="...">
+          <img src="{{ user.profile_picture.url }}" class="card-img-top" alt="photo of user">
           <div class="card-body">
             <h5 class="card-title">{{ target_user }}</h5>
             {% if target_user.bio %}

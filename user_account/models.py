@@ -9,7 +9,6 @@ from django.contrib.auth.models import (
 from django.utils.translation import ugettext_lazy as _
 
 
-from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 
@@ -34,16 +33,16 @@ class Profile(models.Model):
         blank=True,
         null=True,
     )
-    email = models.EmailField()
-    bio = models.TextField(_("bio"), null=True, blank=True)
     profile_picture = models.ImageField(
         upload_to="images/",
         max_length=100,
         default="images/default_profile_picture.jpeg",
     )
+    email = models.EmailField()
+    bio = models.TextField(_("bio"), null=True, blank=True)
     is_new = models.BooleanField(
         _("new status"),
-        default=False,
+        default=True,
     )
     created_at = models.DateTimeField(default=timezone.now())
 

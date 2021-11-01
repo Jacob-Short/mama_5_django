@@ -11,8 +11,8 @@ class CreateProfileForm(forms.Form):
     first_name = forms.CharField(max_length=150)
     last_name = forms.CharField(max_length=150)
     email = EmailField()
-    profile_picture = forms.ImageField(required=False)
     bio = forms.CharField(widget=forms.Textarea)
+    # profile_picture = forms.ImageField(required=False)
 
 class RegisterForm(forms.ModelForm):
     class Meta:
